@@ -12,6 +12,7 @@ beforeEach(function () {
 describe('makeBoard', function () {
 
   it('makes the in-memory board', function () {
+    // debugger;
     expect(testGame.board.length).toEqual(testGame.height);
 
     for (const row of testGame.board) {

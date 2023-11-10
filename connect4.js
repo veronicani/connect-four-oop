@@ -17,6 +17,7 @@ class Game {
     this.currPlayer = 1;
     //global var this.board
     this.board = [];
+    this.start();
   }
 
   /** makeBoard: fill in global `this.board`:
@@ -26,6 +27,7 @@ class Game {
     for (let y = 0; y < this.height; y++) {
       const emptyRow = Array.from({ length: this.width }).fill(null);
       this.board.push(emptyRow);
+      console.log(this.board);
     }
   }
 
@@ -171,7 +173,6 @@ class Game {
 }
 
 let connect4Game = new Game(6, 7);
-connect4Game.start();
 //placing in class Game properties
 // const this.width = 7;
 // const this.height = 6;
