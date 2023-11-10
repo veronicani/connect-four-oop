@@ -34,6 +34,7 @@ class Game {
 
   makeHtmlBoard() {
     const htmlBoard = document.getElementById("board");
+    htmlBoard.innerHTML = "";
 
 
     //create a table row and setting the id to column-top
@@ -87,7 +88,7 @@ class Game {
     const spot = document.getElementById(`c-${y}-${x}`);
     spot.append(piece);
   }
-  
+
 
   /** endGame: announce game end */
 
@@ -136,7 +137,7 @@ class Game {
         }
       }
     }
-    return undefined;
+    return false;
   }
 
   /** handleClick: handle click of column top to play piece */
@@ -154,7 +155,7 @@ class Game {
     // place piece in board and add to HTML table
     this.board[y][x] = this.currPlayer;
     this.placeInTable(y, x);
-   
+
 
     // check for win
     if (this.checkForWin()) {
