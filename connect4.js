@@ -27,14 +27,12 @@ class Game {
     for (let y = 0; y < this.height; y++) {
       const emptyRow = Array.from({ length: this.width }).fill(null);
       this.board.push(emptyRow);
-      console.log(this.board);
     }
   }
 
   /** makeHtmlBoard: make HTML table and row of column tops. */
 
   makeHtmlBoard() {
-    console.log("test");
     const htmlBoard = document.getElementById("board");
 
 
@@ -81,13 +79,15 @@ class Game {
   /** placeInTable: update DOM to place piece into HTML table of board */
 
   placeInTable(y, x) {
+    console.log('place in table: ');
     const piece = document.createElement('div');
     piece.classList.add('piece');
-    piece.classList.add(`p${currPlayer}`);
+    piece.classList.add(`p${this.currPlayer}`);
 
     const spot = document.getElementById(`c-${y}-${x}`);
     spot.append(piece);
   }
+  
 
   /** endGame: announce game end */
 
@@ -98,12 +98,12 @@ class Game {
   /** checkForWin: check board cell-by-cell for "does a win start here?" */
 
   checkForWin() {
-
+    //can declare _win as an arrow function instead of explicit fn declaration
     function _win(cells) {
       // Check four cells to see if they're all color of current player
       //  - cells: list of four (y, x) cells
       //  - returns true if all are legal coordinates & all match currPlayer
-
+      console.log('_win context: ', this);
       return cells.every(
         ([y, x]) =>
           y >= 0 &&
@@ -113,6 +113,10 @@ class Game {
           this.board[y][x] === this.currPlayer
       );
     }
+    //binding _win to the context of 'this' (this being the class instance)
+    //after _win has been declared above
+    //you do not need to invoke the function before binding it
+    const _winBound = _win.bind(this);
 
     for (let y = 0; y < this.height; y++) {
       for (let x = 0; x < this.width; x++) {
@@ -124,12 +128,15 @@ class Game {
         const diagDL = [[y, x], [y + 1, x - 1], [y + 2, x - 2], [y + 3, x - 3]];
 
         // find winner (only checking each win-possibility as needed)
-        if (_win(horiz) || _win(vert) || _win(diagDR) || _win(diagDL)) {
+        //applying .call to _win, passing in the context of 'this'
+        //and the 2nd arg of the coordinates that will be passed into _win
+        if (_win.call(this, horiz)|| _winBound(vert)||
+         _winBound(diagDR)|| _winBound(diagDL)) {
           return true;
         }
       }
     }
-    return false;
+    return undefined;
   }
 
   /** handleClick: handle click of column top to play piece */
@@ -147,6 +154,7 @@ class Game {
     // place piece in board and add to HTML table
     this.board[y][x] = this.currPlayer;
     this.placeInTable(y, x);
+   
 
     // check for win
     if (this.checkForWin()) {
